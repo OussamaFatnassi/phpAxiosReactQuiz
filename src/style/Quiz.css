@@ -1,0 +1,39 @@
+.answers {
+    border-color: black;
+    border: solid 0.15em;
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    border-radius: 2em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    cursor: pointer;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+.answersGroup{
+    padding: 0em;
+}
+
+.questions {
+    font-family: 'Courier New', Courier, monospace;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.confirm {
+    font-family: 'Courier New', Courier, monospace;
+    border: solid 0.15em;
+    width: max-content;
+    margin: auto;
+    text-align: center;
+    border-radius: 2em;
+    font-size: larger10;
+    padding: 0.15em;
+    cursor: pointer;
+    background-color: white;
+}
+.confirmContainer {
+    text-align:end;
+}
