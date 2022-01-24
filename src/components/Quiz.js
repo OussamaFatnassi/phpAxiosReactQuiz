@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import '../style/Quiz.css'
+
 const data = {
     questions: [
         {   
@@ -68,10 +69,11 @@ const data = {
         }
     ]
 };
-/*axios.get('https://opentdb.com/api.php?amount=10&category=20&difficulty=medium')
+/*var data={};
+axios.get('/api.php')
     .then(function(response){
-        questions = response.data.results;
-        console.log(questions);
+        data = response.data.questions;
+        console.log(data);
     }); */
 export default class Quiz extends React.Component{
     state = {

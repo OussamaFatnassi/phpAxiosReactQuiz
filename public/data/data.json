@@ -1,0 +1,67 @@
+{
+    "questions": [
+        {   
+            "question": "L'homme le plus riche du monde",
+            "answers": [
+                { 
+                    "ans": "Zuckemberg",
+                    "correct": "0"
+                }
+                ,{ 
+                    "ans": "Bezos",
+                    "correct": "0"
+                },
+                { 
+                    "ans": "Musk",
+                    "correct": "1"
+                },
+                { 
+                    "ans": "Gates",
+                    "correct": "0"
+                }
+            ]
+        },
+        {   
+            "question": "10+5",
+            "answers": [
+                { 
+                    "ans": "17",
+                    "correct": "0"
+                }
+                ,{ 
+                    "ans": "15",
+                    "correct": "1"
+                },
+                { 
+                    "ans": "42",
+                    "correct": "0"
+                },
+                { 
+                    "ans": "8",
+                    "correct": "0"
+                }
+            ]
+        },
+        {   
+            "question": "La prémiere lettre de l'alphabet",
+            "answers": [
+                { 
+                    "ans": "C",
+                    "correct": "0"
+                }
+                ,{ 
+                    "ans": "Z",
+                    "correct": "0"
+                },
+                { 
+                    "ans": "B",
+                    "correct": "0"
+                },
+                { 
+                    "ans": "A",
+                    "correct": "1"
+                }
+            ]
+        }
+    ]
+}
