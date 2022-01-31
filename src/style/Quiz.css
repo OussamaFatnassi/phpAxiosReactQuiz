@@ -22,7 +22,7 @@
     margin: 0 auto;
 }
 
-.confirm {
+.confirm, .refresh{
     font-family: 'Courier New', Courier, monospace;
     border: solid 0.15em;
     width: max-content;

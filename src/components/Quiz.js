@@ -80,7 +80,7 @@ export default class Quiz extends React.Component{
         points: 0,
         ans: 0,
         confirm: 0,
-        notOver:0
+        notOver:0,
     }
 
     checkAnswer = (e) => {
@@ -114,89 +114,93 @@ export default class Quiz extends React.Component{
                 }
             }
         }
-        //add or remove point if they haven't been clicked based on if they are correct or not
+        //change color if clicked, store answer in tmpstyle and add point if correct
         if(e.target.value == '1' && e.target.answered != "true"){
-            e.target.style = 'background-color: green';
+            e.target.style = 'background-color: #23A0D6';
+            e.target.tmpstyle = 'background-color: green';
             this.setState({points: this.state.points+1});
             e.target.answered = "true";
             this.setState({ans: this.state.ans+1})
-        }else if(e.target.answered != "true"){     
-            e.target.style = 'background-color: red';
+        }else if(e.target.answered != "true"){
+            e.target.style = 'background-color: #23A0D6';     
+            e.target.tmpstyle = 'background-color: red';
             if(this.state.points <=0){
                 this.setState({points: 0})
                 e.target.answered = "true";
                 this.setState({ans: this.state.ans+1})
             }else{
-                this.setState({points: this.state.points-1});
                 e.target.answered = "true";
                 this.setState({ans: this.state.ans+1})
             }
         } 
         // code to enable clicking again to cancel your choice
-        /*else if(e.target.answered == 'true' && e.target.value == '1'){
-            e.target.style = 'background-color: white';
+        else if(e.target.answered == 'true' && e.target.value == '1' && !this.state.confirm){
+            e.target.style = '';
+            e.target.tmpstyle = '';
             this.setState({points: this.state.points-1});
             e.target.answered = "false";
             this.setState({ans: this.state.ans-1})
-        }else if(e.target.answered == 'true' && e.target.value == '0'){
-            e.target.style = 'background-color: white';
-            this.setState({points: this.state.points+1});
+        }else if(e.target.answered == 'true' && e.target.value == '0' && !this.state.confirm){
+            e.target.style = '';
+            e.target.tmpstyle = '';
             e.target.answered = "false";
             this.setState({ans: this.state.ans-1})
-        }*/
+        }
     }
-    //confirm button
-    /*confirm = (e) =>{
+    //on confirm change all the answer style into their tempstyle temp style
+    confirm = (e) =>{
         if (this.state.ans>=data.questions.length){
             this.setState({confirm: 1})
+            var elements = document.getElementsByClassName("answers");
+            for (var i = 0, len = elements.length; i < len; i++) {
+                elements[i].style=elements[i].tmpstyle;
+            }
         }else{
             this.setState({notOver: 1})
         }
-    }*/
-
-    render(){  
-        return(
-            <div className="questions" >
-                {data.questions.map((question,j) => {
-                    return(
-                        <div  key={j}>
-                            <p> 
-                                {j+1}) {question.question}
-                            </p>
-                            <ul className="answersGroup">
-                                {question.answers.map((answer, i) =>{
-                                    return (
-                                        <button className="answers" style={{ backgroundColor: "white"}} value={answer.correct} 
-                                        answered="false" key={i} onClick={this.checkAnswer}>
-                                            {answer.ans}
-                                        </button>)
-                                })}
-                            </ul>
-                        </div>
-                    );
-                })}
-                {
-                    //uncomment and remove && to add a confirm button
-                this.state.ans >= data.questions.length && //this.state.confirm==1 && ?                 
-                <div>
-                    <p>
-                        GAME OVER
-                    </p>
-                    <p>
-                        Vous avez obtenu {this.state.points} {this.state.points>2 && 'points'} {this.state.points==0 && 'points'} {this.state.points==1 && 'point'} sur {data.questions.length}
-                    </p>
-                </div> 
-                /*:                
-                <div className="confirmContainer">
-                    {this.state.notOver>=1 && 'Repondez a toutes les questions svp  '}
-                    <button className="confirm"onClick={this.confirm}>Confirmer</button>
-                </div> */
-                }
-                
-                {/* uncomment to add a points counter
-                <p className="points">{this.state.points}</p>*/
-                }
-            </div>
-        );
     }
-} 
+    refreshPage = () =>{
+        window.location.reload(false);
+      }
+    render(){
+            return(
+                <div className="questions" >
+                    {data.questions.map((question,j) => {
+                        return(
+                            <div  key={j}>
+                                <p> 
+                                    {j+1}) {question.question}
+                                </p>
+                                <ul className="answersGroup">
+                                    {question.answers.map((answer, i) =>{
+                                        return (
+                                            <button className="answers" value={answer.correct} 
+                                            answered="false" key={i} onClick={this.checkAnswer}>
+                                                {answer.ans}
+                                            </button>)
+                                    })}
+                                </ul>
+                            </div>
+                        );
+                    })}
+                    {
+                    this.state.ans >= data.questions.length && this.state.confirm==1 ?                 
+                    <div>
+                        <p>
+                            GAME OVER
+                        </p>
+                        <p>
+                            Vous avez obtenu {this.state.points} {this.state.points>=2 && 'points'} {this.state.points==0 && 'points'} {this.state.points==1 && 'point'} sur {data.questions.length}
+                        </p>
+                        <button className="refresh" onClick={this.refreshPage}>Réessayer</button>
+                    </div>
+                    :                
+                    <div className="confirmContainer">
+                        {this.state.notOver>=1 && 'Repondez a toutes les questions svp  '}
+                        <button className="confirm" onClick={this.confirm}>Confirmer</button>
+                    </div> 
+                    }
+                </div>
+            );
+        }
+    }
