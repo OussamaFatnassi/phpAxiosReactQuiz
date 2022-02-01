@@ -1,127 +1,79 @@
 import axios from "axios";
 import React from "react";
-import '../style/Quiz.css'
-
-const data = {
-    questions: [
-        {   
-            question: "L'homme le plus riche du monde",
-            answers: [
-                { 
-                    ans: "Zuckemberg",
-                    correct: '0'
-                }
-                ,{ 
-                    ans: "Bezos",
-                    correct: '0'
-                },
-                { 
-                    ans: "Musk",
-                    correct: '1'
-                },
-                { 
-                    ans: "Gates",
-                    correct: '0'
-                }
-            ]
-        },
-        {   
-            question: "10+5",
-            answers: [
-                { 
-                    ans: "17",
-                    correct: '0'
-                }
-                ,{ 
-                    ans: "15",
-                    correct: '1'
-                },
-                { 
-                    ans: "42",
-                    correct: '0'
-                },
-                { 
-                    ans: "8",
-                    correct: '0'
-                }
-            ]
-        },
-        {   
-            question: "La prémiere lettre de l'alphabet",
-            answers: [
-                { 
-                    ans: "C",
-                    correct: '0'
-                }
-                ,{ 
-                    ans: "Z",
-                    correct: '0'
-                },
-                { 
-                    ans: "B",
-                    correct: '0'
-                },
-                { 
-                    ans: "A",
-                    correct: '1'
-                }
-            ]
-        }
-    ]
-};
-/*var data={};
-axios.get('/api.php')
-    .then(function(response){
-        data = response.data.questions;
-        console.log(data);
-    }); */
+import '../style/Quiz.css';
+import Gameover from "./Gameover";
 export default class Quiz extends React.Component{
     state = {
         points: 0,
         ans: 0,
         confirm: 0,
         notOver:0,
+        data: {
+            questions: [
+                {   
+                    question: "loading",
+                    answers: [
+                        { 
+                            ans: "loading",
+                            correct: '0'
+                        }
+                        ,{ 
+                            ans: "loading",
+                            correct: '0'
+                        },
+                        { 
+                            ans: "loading",
+                            correct: '1'
+                        },
+                        { 
+                            ans: "loading",
+                            correct: '0'
+                        }
+                    ]
+                }
+            ]
+        }
     }
 
     checkAnswer = (e) => {
         //check if any sibling element has been clicked already, and if they did just return nothing
         if(e.target.nextElementSibling !== null){ 
-                if(e.target.nextElementSibling.answered =="true"){
+                if(e.target.nextElementSibling.answered ==="true"){
                     return;
             }if(e.target.nextElementSibling.nextElementSibling !== null){ 
-                if(e.target.nextElementSibling.nextElementSibling.answered =="true"){
+                if(e.target.nextElementSibling.nextElementSibling.answered ==="true"){
                     return;
                 }
                 if(e.target.nextElementSibling.nextElementSibling.nextElementSibling !== null ){
-                    if( e.target.nextElementSibling.nextElementSibling.nextElementSibling.answered =="true"){
+                    if( e.target.nextElementSibling.nextElementSibling.nextElementSibling.answered ==="true"){
                         return;
                     }
                 }
             }
         }
         if(e.target.previousElementSibling !== null ){
-            if( e.target.previousElementSibling.answered =="true"){
+            if( e.target.previousElementSibling.answered ==="true"){
                 return;
             }  
             if(e.target.previousElementSibling.previousElementSibling !== null ){
-                if( e.target.previousElementSibling.previousElementSibling.answered =="true"){
+                if( e.target.previousElementSibling.previousElementSibling.answered ==="true"){
                     return;
                 }      
                 if(e.target.previousElementSibling.previousElementSibling.previousElementSibling !== null ){
-                    if( e.target.previousElementSibling.previousElementSibling.previousElementSibling.answered =="true"){
+                    if( e.target.previousElementSibling.previousElementSibling.previousElementSibling.answered ==="true"){
                         return;
                     }
                 }
             }
         }
         //change color if clicked, store answer in tmpstyle and add point if correct
-        if(e.target.value == '1' && e.target.answered != "true"){
+        if(e.target.value === '1' && e.target.answered !== "true"){
             e.target.style = 'background-color: #23A0D6';
             e.target.tmpstyle = 'background-color: green';
             this.setState({points: this.state.points+1});
             e.target.answered = "true";
             this.setState({ans: this.state.ans+1})
-        }else if(e.target.answered != "true"){
+        }else if(e.target.answered !== "true"){
             e.target.style = 'background-color: #23A0D6';     
             e.target.tmpstyle = 'background-color: red';
             if(this.state.points <=0){
@@ -134,13 +86,13 @@ export default class Quiz extends React.Component{
             }
         } 
         // code to enable clicking again to cancel your choice
-        else if(e.target.answered == 'true' && e.target.value == '1' && !this.state.confirm){
+        else if(e.target.answered === 'true' && e.target.value === '1' && !this.state.confirm){
             e.target.style = '';
             e.target.tmpstyle = '';
             this.setState({points: this.state.points-1});
             e.target.answered = "false";
             this.setState({ans: this.state.ans-1})
-        }else if(e.target.answered == 'true' && e.target.value == '0' && !this.state.confirm){
+        }else if(e.target.answered === 'true' && e.target.value === '0' && !this.state.confirm){
             e.target.style = '';
             e.target.tmpstyle = '';
             e.target.answered = "false";
@@ -149,7 +101,7 @@ export default class Quiz extends React.Component{
     }
     //on confirm change all the answer style into their tempstyle temp style
     confirm = (e) =>{
-        if (this.state.ans>=data.questions.length){
+        if (this.state.ans>=this.state.data.questions.length){
             this.setState({confirm: 1})
             var elements = document.getElementsByClassName("answers");
             for (var i = 0, len = elements.length; i < len; i++) {
@@ -161,11 +113,19 @@ export default class Quiz extends React.Component{
     }
     refreshPage = () =>{
         window.location.reload(false);
-      }
+    }
+    //refresh state after getting the questions from the api
+    componentDidMount() {
+        axios.get(`http://localhost/api.php`)
+          .then(res => {
+            const tmp = JSON.parse(res.data);
+            this.setState({data: tmp});
+          })
+      }  
     render(){
             return(
                 <div className="questions" >
-                    {data.questions.map((question,j) => {
+                    {this.state.data.questions.map((question,j) => {
                         return(
                             <div  key={j}>
                                 <p> 
@@ -175,8 +135,9 @@ export default class Quiz extends React.Component{
                                     {question.answers.map((answer, i) =>{
                                         return (
                                             <button className="answers" value={answer.correct} 
-                                            answered="false" key={i} onClick={this.checkAnswer}>
-                                                {answer.ans}
+                                            answered="false" key={i} onClick={this.checkAnswer} 
+                                            style={{backgroundColor: answer.correct>=1 && this.state.confirm===1 ? 'green' : ''}}>
+                                                {answer.ans} 
                                             </button>)
                                     })}
                                 </ul>
@@ -184,13 +145,11 @@ export default class Quiz extends React.Component{
                         );
                     })}
                     {
-                    this.state.ans >= data.questions.length && this.state.confirm==1 ?                 
+                    this.state.ans >= this.state.data.questions.length && this.state.confirm===1 ?                 
                     <div>
+                        <Gameover></Gameover>
                         <p>
-                            GAME OVER
-                        </p>
-                        <p>
-                            Vous avez obtenu {this.state.points} {this.state.points>=2 && 'points'} {this.state.points==0 && 'points'} {this.state.points==1 && 'point'} sur {data.questions.length}
+                            Vous avez obtenu {this.state.points} {this.state.points>=2 && 'points'} {this.state.points===0 && 'points'} {this.state.points=== 'point'} sur {this.state.data.questions.length}
                         </p>
                         <button className="refresh" onClick={this.refreshPage}>Réessayer</button>
                     </div>
