@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import '../style/Quiz.css';
 import Gameover from "./Gameover";
+
 export default class Quiz extends React.Component{
     state = {
         points: 0,
@@ -23,7 +24,7 @@ export default class Quiz extends React.Component{
                         },
                         { 
                             ans: "loading",
-                            correct: '1'
+                            correct: '0'
                         },
                         { 
                             ans: "loading",
@@ -32,7 +33,56 @@ export default class Quiz extends React.Component{
                     ]
                 }
             ]
-        }
+        },
+        started:0,
+        choices: [],
+        tochose: 0,
+        create: 0,
+        questionsnb: 1,
+        questions: [{
+            question: "question",
+            answers: 
+                [
+                    { 
+                        ans: "response 1",
+                        correct: '0'
+                    }
+                    ,{ 
+                        ans: "response 2",
+                        correct: '0'
+                    },
+                    { 
+                        ans: "response 3",
+                        correct: '0'
+                    },
+                    { 
+                        ans: "response 4",
+                        correct: '0'
+                    }
+                ]}
+            ],
+        sample:{   
+                question: "question",
+                answers: 
+                    [
+                        { 
+                            ans: "response 1",
+                            correct: '0'
+                        }
+                        ,{ 
+                            ans: "response 2",
+                            correct: '0'
+                        },
+                        { 
+                            ans: "response 3",
+                            correct: '0'
+                        },
+                        { 
+                            ans: "response 4",
+                            correct: '0'
+                        }
+                    ]
+                }
     }
 
     checkAnswer = (e) => {
@@ -51,6 +101,7 @@ export default class Quiz extends React.Component{
                 }
             }
         }
+
         if(e.target.previousElementSibling !== null ){
             if( e.target.previousElementSibling.answered ==="true"){
                 return;
@@ -99,6 +150,7 @@ export default class Quiz extends React.Component{
             this.setState({ans: this.state.ans-1})
         }
     }
+
     //on confirm change all the answer style into their tempstyle temp style
     confirm = (e) =>{
         if (this.state.ans>=this.state.data.questions.length){
@@ -111,18 +163,98 @@ export default class Quiz extends React.Component{
             this.setState({notOver: 1})
         }
     }
+
     refreshPage = () =>{
         window.location.reload(false);
     }
+
     //refresh state after getting the questions from the api
     componentDidMount() {
-        axios.get(`http://localhost/api.php`)
-          .then(res => {
-            const tmp = JSON.parse(res.data);
-            this.setState({data: tmp});
-          })
-      }  
+        axios.get(`http://localhost/list.php`)
+        .then(res => {
+            const list = res.data;
+            this.setState({choices: list});
+            this.setState({tochose: 1})
+        })
+    }
+
+    chosen = (e) => {
+        let tmpid = parseInt(e.target.id);
+        axios.get(`http://localhost/api.php?id=`+tmpid)
+        .then(res => {
+          const tmpdata = JSON.parse(res.data.json);
+          this.setState({data: tmpdata});
+          this.setState({started: 1})
+        })
+    }
+    
+    tocreate = ()=>{
+        this.setState({create: 1})
+    }
+
+    addquestion = () => {
+        this.setState({questionsnb: this.state.questionsnb+1});
+        let question = this.state.sample;
+        this.state.questions.push(question)
+        console.log(this.state.questions)
+    }
+
+    removequestion = () => {
+        if(this.state.questionsnb>1){
+            this.setState({questionsnb: this.state.questionsnb-1})
+            this.state.questions.pop()
+        }
+    }
+    /*createquiz =(e)=>{
+        e.preventDefault()
+        for(let i;i<=this.state.questions.length;i++){
+            console.log(e.target)
+        }
+        console.log(e.target)
+    }*/
     render(){
+        if(this.state.create === 1){
+            return(
+                <div>
+                    <p>
+                        <button onClick={this.addquestion}>
+                            Ajouter une question
+                        </button>
+                        <button onClick={this.removequestion}>
+                            enlever une question
+                        </button>
+                    </p>
+                    <form action="http://localhost/insert.php" method="post">
+                    {
+                        this.state.questions.map((question, i)=>{
+                            return(
+                                <div key={i}>
+                                    <label for={"q"+i}>{question.question} {i+1}:  </label>
+                                    <input type="text" id={"q"+i} name={"q"+i}></input>
+                                    {
+                                        question.answers.map((answer, j)=>{
+                                            return(
+                                                <div key={j}>
+                                                    <label for={"q"+i+"ans"+j}>{answer.ans} : </label>
+                                                    <input type="text" id={"q"+i+"ans"+j} name={"q"+i+"ans"+j}></input>
+                                                    <label for={"q"+i+"ans"+j+"c"}>correct:</label>
+                                                    <input type="hidden" id={"q"+i+"ans"+j+"c"} name={"q"+i+"ans"+j+"c"} value="incorrect"></input>
+                                                    <input type="checkbox" id={"q"+i+"ans"+j+"c"} name={"q"+i+"ans"+j+"c"} value="correct"></input>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    <br/>
+                                </div>
+                            )
+                        })
+                    }
+                    <input type="submit" value="Valider"></input>
+                    </form>
+                </div>
+            )
+        }
+        else if(this.state.started === 1){
             return(
                 <div className="questions" >
                     {this.state.data.questions.map((question,j) => {
@@ -137,8 +269,9 @@ export default class Quiz extends React.Component{
                                             <button className="answers" value={answer.correct} 
                                             answered="false" key={i} onClick={this.checkAnswer} 
                                             style={{backgroundColor: answer.correct>=1 && this.state.confirm===1 ? 'green' : ''}}>
-                                                {answer.ans} 
-                                            </button>)
+                                                {answer.ans}
+                                            </button>
+                                            )
                                     })}
                                 </ul>
                             </div>
@@ -161,5 +294,21 @@ export default class Quiz extends React.Component{
                     }
                 </div>
             );
+        } else{
+            return(
+                <div className="choice">
+                    <p>Choisissez un Quiz ou <button className="create" onClick={this.tocreate}>crée un Quiz</button></p>
+                    {   
+                        this.state.choices.map((choice, l)=>{
+                            return(
+                                <div key={l} id={l} className="choices" onClick={this.chosen}>
+                                    {choice}
+                                </div>    
+                            )
+                        })
+                    }
+                </div>
+            )
         }
     }
+}
