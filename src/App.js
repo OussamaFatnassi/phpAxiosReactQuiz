@@ -5,7 +5,7 @@ class App extends react.Component {
   render(){  
     return (
       <div className='App' >
-        <h1>Mon Quiz</h1>
+        <h1>Quiz</h1>
         <Quiz/>
       </div>
     );

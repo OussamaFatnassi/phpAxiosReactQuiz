@@ -55,3 +55,10 @@
 .confirmContainer {
     text-align:end;
 }
+.newlabel .newquestionlabel {
+    display:inline-block;
+    margin-right:10px;
+}
+.newans .newcorrect .newquestion{
+    display:inline-block;
+}
